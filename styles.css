@@ -67,6 +67,7 @@ body{
 /* ---------- card ---------- */
 
 .card{
+  position:relative;
   width:100%;
   max-width:430px;
   padding:30px 22px 20px;
@@ -80,6 +81,28 @@ body{
 }
 
 @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+/* ---------- language toggle ---------- */
+
+.lang{
+  position:absolute;
+  top:14px;
+  inset-inline-end:14px;
+  z-index:2;
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 12px;
+  border-radius:999px;
+  border:1px solid var(--hairline);
+  background:rgba(255,255,255,.55);
+  color:var(--ink-soft);
+  font:inherit;font-size:12.5px;font-weight:600;line-height:1.6;
+  cursor:pointer;
+  transition:color .2s ease,border-color .2s ease,background .2s ease;
+}
+.lang svg{width:14px;height:14px;flex:none;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.lang:hover{color:var(--dusty-grape);background:#fff;border-color:rgba(85,65,139,.35)}
+.lang:active{transform:scale(.96)}
+.lang:focus-visible{outline:2px solid var(--dusty-grape);outline-offset:3px}
 
 /* ---------- head ---------- */
 
@@ -158,13 +181,16 @@ body{
 .link .value{
   font-size:12.5px;color:var(--ink-soft);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  direction:ltr;text-align:right;
+  direction:ltr;unicode-bidi:plaintext;
   font-variant-numeric:tabular-nums;
 }
-html[dir="rtl"] .link .value{text-align:right;unicode-bidi:plaintext}
+html[dir="rtl"] .link .value{text-align:right}
+html[dir="ltr"] .link .value{text-align:left}
 
 .link .chev{flex:none;width:18px;height:18px;color:var(--accent);opacity:.5;transition:transform .22s ease,opacity .22s ease}
+html[dir="ltr"] .link .chev{transform:scaleX(-1)}
 .link:hover .chev{opacity:1;transform:translateX(-3px)}
+html[dir="ltr"] .link:hover .chev{transform:scaleX(-1) translateX(-3px)}
 
 /* copy button sitting inside a link row (whatsapp / email) */
 .copy{

@@ -1,11 +1,62 @@
 /* ريّــد — link in bio
-   Builds the link list from config.js. */
+   Builds the link list from config.js and handles the AR / EN toggle. */
 
 (function () {
   'use strict';
 
   var cfg = window.REID_CONFIG || {};
   var links = cfg.links || {};
+
+  /* ------------------------------------------------------------------ */
+  /* النصوص — strings                                                    */
+  /* ------------------------------------------------------------------ */
+
+  var STRINGS = {
+    ar: {
+      dir: 'rtl',
+      navLabel: 'روابط التواصل',
+      pageTitle: 'روابط التواصل',
+      share: 'مشاركة الصفحة',
+      urlCopied: 'تم نسخ رابط الصفحة',
+      copyFailed: 'تعذّر النسخ',
+      rights: 'جميع الحقوق محفوظة.',
+      switchTo: 'EN',
+      switchTitle: 'Switch to English',
+      labels: {
+        linkedin: 'لينكدإن',
+        whatsapp: 'واتساب',
+        email: 'البريد الإلكتروني',
+        instagram: 'انستقرام',
+        website: 'الموقع الإلكتروني'
+      },
+      copyBtn: { whatsapp: 'نسخ رقم الواتساب', email: 'نسخ البريد الإلكتروني' },
+      copyDone: { whatsapp: 'تم نسخ رقم الواتساب', email: 'تم نسخ البريد الإلكتروني' }
+    },
+    en: {
+      dir: 'ltr',
+      navLabel: 'Contact links',
+      pageTitle: 'Contact links',
+      share: 'Share this page',
+      urlCopied: 'Page link copied',
+      copyFailed: 'Copying failed',
+      rights: 'All rights reserved.',
+      switchTo: 'ع',
+      switchTitle: 'التبديل إلى العربية',
+      labels: {
+        linkedin: 'LinkedIn',
+        whatsapp: 'WhatsApp',
+        email: 'Email',
+        instagram: 'Instagram',
+        website: 'Website'
+      },
+      copyBtn: { whatsapp: 'Copy phone number', email: 'Copy email address' },
+      copyDone: { whatsapp: 'Phone number copied', email: 'Email address copied' }
+    }
+  };
+
+  /* ------------------------------------------------------------------ */
+  /* الأيقونات — icons                                                   */
+  /* ------------------------------------------------------------------ */
 
   var ICONS = {
     linkedin: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>',
@@ -18,9 +69,17 @@
   var CHEVRON = '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5.5 8.5 12l6.5 6.5"/></svg>';
   var COPY_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M15 5.5A2.5 2.5 0 0 0 12.5 3h-6A3.5 3.5 0 0 0 3 6.5v6A2.5 2.5 0 0 0 5.5 15"/></svg>';
 
-  /* ---------- helpers ---------- */
+  /* ------------------------------------------------------------------ */
+  /* أدوات — helpers                                                     */
+  /* ------------------------------------------------------------------ */
 
   function digits(v) { return String(v || '').replace(/\D/g, ''); }
+
+  /* قيمة قد تكون نصًّا واحدًا أو كائنًا فيه ar / en */
+  function pick(value, lang) {
+    if (value && typeof value === 'object') return value[lang] || value.ar || value.en || '';
+    return value || '';
+  }
 
   /* تنسيق الرقم للعرض فقط — الرابط نفسه يستخدم الأرقام كما هي */
   var PHONE_FORMATS = [
@@ -74,117 +133,143 @@
     }
   }
 
-  /* ---------- build the entries ---------- */
+  /* ------------------------------------------------------------------ */
+  /* بناء الروابط — link entries                                         */
+  /* ------------------------------------------------------------------ */
 
-  var entries = [];
+  function buildEntries(lang) {
+    var t = STRINGS[lang];
+    var out = [];
 
-  if (links.linkedin) {
-    entries.push({
-      key: 'linkedin',
-      label: 'لينكدإن',
-      value: prettyUrl(links.linkedin),
-      href: withProtocol(links.linkedin),
-      external: true
-    });
-  }
-
-  if (links.whatsapp) {
-    var wa = digits(links.whatsapp);
-    var msg = cfg.whatsappMessage ? '?text=' + encodeURIComponent(cfg.whatsappMessage) : '';
-    entries.push({
-      key: 'whatsapp',
-      label: 'واتساب',
-      value: prettyPhone(wa),
-      href: 'https://wa.me/' + wa + msg,
-      external: true,
-      copy: '+' + wa,
-      copyLabel: 'نسخ رقم الواتساب'
-    });
-  }
-
-  if (links.email) {
-    entries.push({
-      key: 'email',
-      label: 'البريد الإلكتروني',
-      value: links.email,
-      href: 'mailto:' + links.email,
-      copy: links.email,
-      copyLabel: 'نسخ البريد الإلكتروني'
-    });
-  }
-
-  if (links.instagram) {
-    var handle = String(links.instagram).trim().replace(/^@/, '').replace(/^https?:\/\/(www\.)?instagram\.com\//i, '').replace(/\/$/, '');
-    entries.push({
-      key: 'instagram',
-      label: 'انستقرام',
-      value: '@' + handle,
-      href: 'https://instagram.com/' + handle,
-      external: true
-    });
-  }
-
-  if (links.website) {
-    entries.push({
-      key: 'website',
-      label: 'الموقع الإلكتروني',
-      value: prettyUrl(links.website),
-      href: withProtocol(links.website),
-      external: true
-    });
-  }
-
-  /* ---------- render ---------- */
-
-  var list = document.getElementById('links');
-
-  entries.forEach(function (item, i) {
-    var a = document.createElement('a');
-    a.className = 'link';
-    a.href = item.href;
-    a.dataset.key = item.key;
-    a.style.setProperty('--delay', (90 + i * 70) + 'ms');
-    if (item.external) {
-      a.target = '_blank';
-      a.rel = 'noopener noreferrer';
-    }
-    a.setAttribute('aria-label', item.label + ': ' + item.value);
-
-    a.innerHTML =
-      '<span class="icon">' + ICONS[item.key] + '</span>' +
-      '<span class="text">' +
-        '<span class="label">' + item.label + '</span>' +
-        '<span class="value">' + item.value + '</span>' +
-      '</span>' +
-      (item.copy
-        ? '<button class="copy" type="button" title="' + item.copyLabel + '" aria-label="' + item.copyLabel + '">' + COPY_ICON + '</button>'
-        : CHEVRON);
-
-    var btn = a.querySelector('.copy');
-    if (btn) {
-      btn.addEventListener('click', function (ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-        copy(item.copy, 'تم نسخ ' + item.label);
+    if (links.linkedin) {
+      out.push({
+        key: 'linkedin',
+        value: prettyUrl(links.linkedin),
+        href: withProtocol(links.linkedin),
+        external: true
       });
     }
 
-    list.appendChild(a);
-  });
+    if (links.whatsapp) {
+      var wa = digits(links.whatsapp);
+      var msg = pick(cfg.whatsappMessage, lang);
+      out.push({
+        key: 'whatsapp',
+        value: prettyPhone(wa),
+        href: 'https://wa.me/' + wa + (msg ? '?text=' + encodeURIComponent(msg) : ''),
+        external: true,
+        copy: '+' + wa
+      });
+    }
 
-  /* ---------- head text ---------- */
+    if (links.email) {
+      out.push({
+        key: 'email',
+        value: links.email,
+        href: 'mailto:' + links.email,
+        copy: links.email
+      });
+    }
 
-  if (cfg.name) {
-    document.getElementById('wordmark').alt = cfg.name;
-    document.title = cfg.name + ' — روابط التواصل';
+    if (links.instagram) {
+      var handle = String(links.instagram).trim()
+        .replace(/^@/, '')
+        .replace(/^https?:\/\/(www\.)?instagram\.com\//i, '')
+        .replace(/\/$/, '');
+      out.push({
+        key: 'instagram',
+        value: '@' + handle,
+        href: 'https://instagram.com/' + handle,
+        external: true
+      });
+    }
+
+    if (links.website) {
+      out.push({
+        key: 'website',
+        value: prettyUrl(links.website),
+        href: withProtocol(links.website),
+        external: true
+      });
+    }
+
+    out.forEach(function (item) { item.label = t.labels[item.key]; });
+    return out;
   }
-  if (cfg.tagline) document.getElementById('tagline').textContent = cfg.tagline;
-  document.getElementById('year').textContent = new Date().getFullYear();
 
-  /* ---------- toast ---------- */
+  /* ------------------------------------------------------------------ */
+  /* الرسم — rendering                                                   */
+  /* ------------------------------------------------------------------ */
 
+  var list = document.getElementById('links');
   var toast = document.getElementById('toast');
   var toastTimer;
+  var lang;
+
+  function render(next, animate) {
+    lang = next;
+    var t = STRINGS[lang];
+    var name = pick(cfg.name, lang);
+
+    document.documentElement.lang = lang;
+    document.documentElement.dir = t.dir;
+    document.title = name + ' — ' + t.pageTitle;
+
+    document.getElementById('wordmark').alt = name;
+    document.getElementById('tagline').textContent = pick(cfg.tagline, lang);
+    document.getElementById('share-text').textContent = t.share;
+    document.getElementById('rights').textContent =
+      '© ' + new Date().getFullYear() + ' ' + name + '. ' + t.rights;
+
+    var toggle = document.getElementById('lang');
+    document.getElementById('lang-text').textContent = t.switchTo;
+    toggle.title = t.switchTitle;
+    toggle.setAttribute('aria-label', t.switchTitle);
+
+    list.setAttribute('aria-label', t.navLabel);
+    list.innerHTML = '';
+
+    buildEntries(lang).forEach(function (item, i) {
+      var a = document.createElement('a');
+      a.className = 'link';
+      a.href = item.href;
+      a.dataset.key = item.key;
+      if (animate) a.style.setProperty('--delay', (90 + i * 70) + 'ms');
+      else a.style.setProperty('--delay', '0ms');
+      if (item.external) {
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+      }
+      a.setAttribute('aria-label', item.label + ': ' + item.value);
+
+      var btnLabel = item.copy ? t.copyBtn[item.key] : '';
+
+      a.innerHTML =
+        '<span class="icon">' + ICONS[item.key] + '</span>' +
+        '<span class="text">' +
+          '<span class="label">' + item.label + '</span>' +
+          '<span class="value">' + item.value + '</span>' +
+        '</span>' +
+        (item.copy
+          ? '<button class="copy" type="button" title="' + btnLabel + '" aria-label="' + btnLabel + '">' + COPY_ICON + '</button>'
+          : CHEVRON);
+
+      var btn = a.querySelector('.copy');
+      if (btn) {
+        btn.addEventListener('click', function (ev) {
+          ev.preventDefault();
+          ev.stopPropagation();
+          copy(item.copy, STRINGS[lang].copyDone[item.key]);
+        });
+      }
+
+      list.appendChild(a);
+    });
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* التنبيه والنسخ — toast & clipboard                                  */
+  /* ------------------------------------------------------------------ */
 
   function say(message) {
     toast.textContent = message;
@@ -195,7 +280,7 @@
 
   function copy(text, message) {
     var done = function () { say(message); };
-    var fail = function () { say('تعذّر النسخ'); };
+    var fail = function () { say(STRINGS[lang].copyFailed); };
 
     if (navigator.clipboard && window.isSecureContext) {
       navigator.clipboard.writeText(text).then(done, fallback);
@@ -216,18 +301,68 @@
     }
   }
 
-  /* ---------- share ---------- */
+  /* ------------------------------------------------------------------ */
+  /* اللغة — language                                                    */
+  /* ------------------------------------------------------------------ */
+
+  var STORE_KEY = 'reid-lang';
+
+  function readStored() {
+    try { return localStorage.getItem(STORE_KEY); } catch (e) { return null; }
+  }
+
+  function writeStored(v) {
+    try { localStorage.setItem(STORE_KEY, v); } catch (e) { /* الوضع الخاص يمنع التخزين */ }
+  }
+
+  function initialLang() {
+    var fromUrl = new URLSearchParams(location.search).get('lang');
+    if (STRINGS[fromUrl]) return fromUrl;
+
+    var stored = readStored();
+    if (STRINGS[stored]) return stored;
+
+    var fallback = cfg.defaultLang || 'ar';
+    if (fallback === 'auto') {
+      return /^ar\b/i.test(navigator.language || '') ? 'ar' : 'en';
+    }
+    return STRINGS[fallback] ? fallback : 'ar';
+  }
+
+  /* يبقي ?lang= في العنوان متطابقًا مع اللغة المعروضة، حتى تُشارَك الصفحة بلغتها */
+  function syncUrl() {
+    if (!history.replaceState) return;
+    var url = new URL(location.href);
+    url.searchParams.set('lang', lang);
+    history.replaceState(null, '', url);
+  }
+
+  document.getElementById('lang').addEventListener('click', function () {
+    render(lang === 'ar' ? 'en' : 'ar', false);
+    writeStored(lang);
+    syncUrl();
+  });
+
+  /* ------------------------------------------------------------------ */
+  /* المشاركة — share                                                    */
+  /* ------------------------------------------------------------------ */
 
   document.getElementById('share').addEventListener('click', function () {
+    var t = STRINGS[lang];
     var data = {
-      title: (cfg.name || 'ريّــد') + ' — روابط التواصل',
-      text: cfg.tagline || '',
+      title: pick(cfg.name, lang) + ' — ' + t.pageTitle,
+      text: pick(cfg.tagline, lang),
       url: location.href
     };
     if (navigator.share) {
       navigator.share(data).catch(function () { /* المستخدم ألغى المشاركة */ });
     } else {
-      copy(location.href, 'تم نسخ رابط الصفحة');
+      copy(location.href, t.urlCopied);
     }
   });
+
+  /* ------------------------------------------------------------------ */
+
+  render(initialLang(), true);
+  syncUrl();
 })();
