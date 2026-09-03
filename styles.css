@@ -1,0 +1,248 @@
+/* ريّــد — link in bio
+   Brand palette taken from the company colour sheet + logo artwork. */
+
+:root{
+  /* palette */
+  --white-smoke:   #F5F5F4;
+  --lavender-blush:#E5DBE6;
+  --rosy-taupe:    #BBA0A0;
+  --periwinkle:    #7D80DA;
+  --dusty-grape:   #55418B;
+  --deep-purple:   #40276D;
+
+  /* logo tints */
+  --tint-1:#DBCDD5;
+  --tint-2:#BFA5A7;
+  --tint-3:#927A97;
+  --tint-4:#604B8D;
+
+  --ink:        #2B1D46;
+  --ink-soft:   #6B5E86;
+  --surface:    rgba(255,255,255,.62);
+  --surface-2:  rgba(255,255,255,.78);
+  --hairline:   rgba(85,65,139,.14);
+  --shadow:     0 24px 60px -24px rgba(43,29,70,.45);
+
+  --radius:     22px;
+  --radius-lg:  30px;
+}
+
+*{box-sizing:border-box}
+
+html,body{min-height:100%}
+
+body{
+  margin:0;
+  padding:max(24px,env(safe-area-inset-top)) 18px max(28px,env(safe-area-inset-bottom));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:'IBM Plex Sans Arabic','Segoe UI',system-ui,-apple-system,sans-serif;
+  color:var(--ink);
+  background:var(--lavender-blush);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- background ---------- */
+
+.aurora{position:fixed;inset:0;z-index:-1;overflow:hidden;background:linear-gradient(160deg,#EFE9F1 0%,#DDD5E8 45%,#C9C2E4 100%)}
+
+.blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.75;will-change:transform}
+.blob-1{width:62vmax;height:62vmax;top:-24vmax;right:-18vmax;background:var(--periwinkle);opacity:.55;animation:drift-a 26s ease-in-out infinite alternate}
+.blob-2{width:52vmax;height:52vmax;bottom:-22vmax;left:-16vmax;background:var(--dusty-grape);opacity:.5;animation:drift-b 32s ease-in-out infinite alternate}
+.blob-3{width:38vmax;height:38vmax;top:34%;left:-14vmax;background:var(--rosy-taupe);opacity:.5;animation:drift-c 24s ease-in-out infinite alternate}
+.blob-4{width:34vmax;height:34vmax;bottom:6%;right:-10vmax;background:var(--white-smoke);opacity:.6;animation:drift-a 30s ease-in-out infinite alternate-reverse}
+
+@keyframes drift-a{from{transform:translate3d(0,0,0) scale(1)}to{transform:translate3d(-6%,7%,0) scale(1.12)}}
+@keyframes drift-b{from{transform:translate3d(0,0,0) scale(1)}to{transform:translate3d(8%,-6%,0) scale(1.1)}}
+@keyframes drift-c{from{transform:translate3d(0,0,0) scale(1)}to{transform:translate3d(5%,-9%,0) scale(1.15)}}
+
+/* fine grain, same feel as the brand colour sheet */
+.grain{
+  position:absolute;inset:-50%;opacity:.055;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------- card ---------- */
+
+.card{
+  width:100%;
+  max-width:430px;
+  padding:30px 22px 20px;
+  border-radius:var(--radius-lg);
+  background:var(--surface);
+  border:1px solid rgba(255,255,255,.6);
+  box-shadow:var(--shadow);
+  backdrop-filter:blur(26px) saturate(160%);
+  -webkit-backdrop-filter:blur(26px) saturate(160%);
+  animation:rise .7s cubic-bezier(.2,.7,.3,1) both;
+}
+
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+/* ---------- head ---------- */
+
+.head{text-align:center;margin-bottom:26px}
+
+.logo-tile{
+  width:104px;height:104px;margin:0 auto 16px;
+  display:grid;place-items:center;
+  border-radius:28px;
+  background:linear-gradient(155deg,#FFFFFF 0%,var(--white-smoke) 55%,var(--lavender-blush) 100%);
+  border:1px solid rgba(255,255,255,.9);
+  box-shadow:0 14px 34px -14px rgba(85,65,139,.5), inset 0 1px 0 #fff;
+}
+
+.logo-mark{display:block;height:60px;width:auto}
+
+.brand{margin:0;line-height:0}
+
+.wordmark{
+  display:block;
+  margin:0 auto;
+  width:clamp(112px,34%,142px);
+  height:auto;
+}
+
+.tagline{
+  margin:10px 0 0;
+  font-size:14.5px;
+  font-weight:400;
+  color:var(--ink-soft);
+}
+
+/* ---------- links ---------- */
+
+.links{display:flex;flex-direction:column;gap:11px}
+
+.link{
+  --accent:var(--dusty-grape);
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:13px;
+  padding:13px 15px;
+  border-radius:var(--radius);
+  background:var(--surface-2);
+  border:1px solid var(--hairline);
+  color:var(--ink);
+  text-decoration:none;
+  box-shadow:0 6px 18px -12px rgba(43,29,70,.55);
+  transition:transform .22s cubic-bezier(.2,.7,.3,1), box-shadow .22s ease, background .22s ease, border-color .22s ease;
+  animation:rise .55s cubic-bezier(.2,.7,.3,1) both;
+  animation-delay:var(--delay,0ms);
+}
+
+.link:hover,.link:focus-visible{
+  transform:translateY(-2px);
+  background:#fff;
+  border-color:color-mix(in srgb,var(--accent) 38%,transparent);
+  box-shadow:0 16px 30px -16px color-mix(in srgb,var(--accent) 75%,transparent);
+}
+.link:active{transform:translateY(0) scale(.99)}
+.link:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+.link .icon{
+  flex:none;
+  width:42px;height:42px;
+  display:grid;place-items:center;
+  border-radius:14px;
+  background:color-mix(in srgb,var(--accent) 13%,#fff);
+  color:var(--accent);
+}
+.link .icon svg{width:21px;height:21px;display:block}
+
+.link .text{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.link .label{font-size:15.5px;font-weight:600;line-height:1.5}
+.link .value{
+  font-size:12.5px;color:var(--ink-soft);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  direction:ltr;text-align:right;
+  font-variant-numeric:tabular-nums;
+}
+html[dir="rtl"] .link .value{text-align:right;unicode-bidi:plaintext}
+
+.link .chev{flex:none;width:18px;height:18px;color:var(--accent);opacity:.5;transition:transform .22s ease,opacity .22s ease}
+.link:hover .chev{opacity:1;transform:translateX(-3px)}
+
+/* copy button sitting inside a link row (whatsapp / email) */
+.copy{
+  flex:none;
+  width:34px;height:34px;
+  display:grid;place-items:center;
+  border:1px solid var(--hairline);
+  border-radius:11px;
+  background:#fff;
+  color:var(--ink-soft);
+  cursor:pointer;
+  transition:color .2s ease,border-color .2s ease,transform .2s ease;
+}
+.copy svg{width:15px;height:15px;display:block}
+.copy:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+.copy:active{transform:scale(.92)}
+.copy:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* brand accents */
+.link[data-key="linkedin"] {--accent:#3A6FA8}
+.link[data-key="whatsapp"] {--accent:#1FA855}
+.link[data-key="email"]    {--accent:#7D80DA}
+.link[data-key="instagram"]{--accent:#C13584}
+.link[data-key="website"]  {--accent:#55418B}
+
+/* ---------- actions & footer ---------- */
+
+.actions{margin-top:18px;display:flex;justify-content:center}
+
+.share{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:9px 18px;
+  border-radius:999px;
+  border:1px solid var(--hairline);
+  background:rgba(255,255,255,.5);
+  color:var(--ink-soft);
+  font:inherit;font-size:13.5px;font-weight:500;
+  cursor:pointer;
+  transition:color .2s ease,border-color .2s ease,background .2s ease;
+}
+.share svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.share:hover{color:var(--dusty-grape);background:#fff;border-color:rgba(85,65,139,.35)}
+.share:focus-visible{outline:2px solid var(--dusty-grape);outline-offset:3px}
+
+.foot{
+  margin-top:20px;padding-top:14px;
+  border-top:1px solid var(--hairline);
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  font-size:12px;color:var(--ink-soft);
+}
+.foot img{opacity:.65}
+
+/* ---------- toast ---------- */
+
+.toast{
+  position:fixed;
+  left:50%;bottom:26px;
+  transform:translate(-50%,14px);
+  padding:10px 18px;
+  border-radius:999px;
+  background:var(--deep-purple);
+  color:#fff;
+  font-size:13.5px;font-weight:500;
+  box-shadow:0 16px 34px -14px rgba(43,29,70,.8);
+  opacity:0;pointer-events:none;
+  transition:opacity .25s ease,transform .25s ease;
+  z-index:9;
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- preferences ---------- */
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+}
+
+@media (max-width:360px){
+  .card{padding:24px 16px 16px}
+  .link{padding:11px 12px;gap:11px}
+  .link .icon{width:38px;height:38px}
+}

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="ريّد">
+  <rect width="64" height="64" rx="14" fill="#F5F5F4"/>
+  <g transform="translate(21.35 12) scale(0.183) translate(-481.833 -430.689)">
+    <rect x="481.833" y="595.023" width="27.122" height="54.288"  rx="7.673" fill="#DBCDD5"/>
+    <rect x="511.571" y="495.429" width="27.121" height="153.882" rx="7.673" fill="#BFA5A7"/>
+    <rect x="541.308" y="540.395" width="27.121" height="108.916" rx="7.673" fill="#927A97"/>
+    <rect x="571.045" y="458.102" width="27.122" height="191.209" rx="7.673" fill="#604B8D"/>
+    <rect x="571.045" y="430.689" width="27.122" height="24.897"  rx="7.673" fill="#55418B"/>
+  </g>
+</svg>
