@@ -3,7 +3,7 @@
    Edit the values below. Nothing else needs to change.
    ===================================================================== */
 
-window.RAYYED_CONFIG = {
+window.REID_CONFIG = {
   /* اسم الشركة كما يظهر تحت الشعار */
   name: 'ريّـــد',
 
@@ -13,19 +13,19 @@ window.RAYYED_CONFIG = {
   /* روابط التواصل — اترك القيمة فارغة '' لإخفاء الزر من الصفحة */
   links: {
     /* رابط صفحة الشركة على لينكدإن */
-    linkedin: 'https://www.linkedin.com/company/YOUR-COMPANY',
+    linkedin: 'https://www.linkedin.com/company/reidpro/',
 
-    /* رقم الواتساب بالصيغة الدولية بدون + وبدون مسافات، مثال: 966512345678 */
-    whatsapp: '966500000000',
+    /* رقم الواتساب بالصيغة الدولية بدون + وبدون مسافات، مثال: 96897308003 */
+    whatsapp: '96897308003',
 
     /* البريد الإلكتروني */
-    email: 'info@example.com',
+    email: 'reid.contact.us@gmail.com',
 
     /* اسم المستخدم في انستقرام بدون @ */
-    instagram: 'YOUR-ACCOUNT',
+    instagram: 'reid.pro_',
 
     /* رابط الموقع الإلكتروني */
-    website: 'https://example.com'
+    website: 'https://reidpro.com/'
   },
 
   /* رسالة الواتساب الجاهزة عند الضغط على الزر */

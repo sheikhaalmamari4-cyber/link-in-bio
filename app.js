@@ -4,7 +4,7 @@
 (function () {
   'use strict';
 
-  var cfg = window.RAYYED_CONFIG || {};
+  var cfg = window.REID_CONFIG || {};
   var links = cfg.links || {};
 
   var ICONS = {

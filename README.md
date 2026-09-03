@@ -1,6 +1,6 @@
-# ريّــد — Link in Bio
+# ريّــد | REID — Link in Bio
 
-صفحة روابط واحدة لشركة **ريّــد**، تجمع لينكدإن والواتساب والبريد الإلكتروني وانستقرام والموقع الإلكتروني
+صفحة روابط واحدة لشركة **ريّــد (REID)**، تجمع لينكدإن والواتساب والبريد الإلكتروني وانستقرام والموقع الإلكتروني
 في مكان واحد. الصفحة مبنية بـ HTML/CSS/JS فقط — بدون أي مكتبات أو خطوات بناء.
 
 ## تعديل الروابط
@@ -8,15 +8,15 @@
 كل ما تحتاجه موجود في ملف واحد: **`config.js`**.
 
 ```js
-window.RAYYED_CONFIG = {
+window.REID_CONFIG = {
   name: 'ريّـــد',
   tagline: 'حلول وتحليلات تصنع الفرق',
   links: {
-    linkedin:  'https://www.linkedin.com/company/...',
-    whatsapp:  '966512345678',   // بالصيغة الدولية، بدون + وبدون مسافات
-    email:     'info@rayyed.com',
-    instagram: 'rayyed',         // اسم المستخدم بدون @
-    website:   'https://rayyed.com'
+    linkedin:  'https://www.linkedin.com/company/reidpro/',
+    whatsapp:  '96897308003',    // بالصيغة الدولية، بدون + وبدون مسافات
+    email:     'reid.contact.us@gmail.com',
+    instagram: 'reid.pro_',      // اسم المستخدم بدون @
+    website:   'https://reidpro.com/'
   },
   whatsappMessage: 'السلام عليكم، أود الاستفسار عن خدمات ريّد.'
 };
